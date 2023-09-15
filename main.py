@@ -18,7 +18,12 @@ flash_icon = pygame.image.load('Images/flash.png').convert()
 flash_icon_grey = pygame.image.load('Images/flash_grey.png').convert()
 
 
-player = Player(gameDisplay)
+bullet_sprite_group = pygame.sprite.Group()
+sprites_group = pygame.sprite.Group()
+
+player = Player(gameDisplay, bullet_sprite_group, sprites_group)
+
+sprites_group.add(player)
 
 while not exit:
     input = pygame.key.get_pressed()
@@ -28,13 +33,12 @@ while not exit:
             exit = True
 
     gameDisplay.blit(background, (0,0))
-    gameDisplay.blit(player.image, player.position)
     if player.flash_cd == 0:
         gameDisplay.blit(flash_icon, (1100, 600))
     else:
         gameDisplay.blit(flash_icon_grey, (1100, 600))
-
-    player.update_position()
+    sprites_group.draw(gameDisplay)
+    sprites_group.update()
     pygame.display.update()
     clock.tick(FRAME_RATE)
 
