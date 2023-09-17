@@ -5,13 +5,22 @@ from keys import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, screen, bullet_sprite_group, sprites_group):
+    def __init__(self, screen, bullet_sprite_group, sprites_group, char_image, bullet_speed, bullet_allowed_time):
         super().__init__()
-        # Import images for character and flash animation.
-        self.image = pygame.transform.scale(pygame.image.load("images/lucian.jpg").convert_alpha(),(PLAYER_WIDTH, PLAYER_HEIGHT))
+        # Character Image
+        self.image = char_image     
+
+        # Flash ability related variables
         self.flash_particles = pygame.transform.scale(pygame.image.load("images/flash_particles.png").convert_alpha(),(PLAYER_WIDTH, PLAYER_HEIGHT))
-        self.flash_sound = pygame.mixer.Sound("audio/flash_sound.mp3") # Retrieves the flash audio.
+        self.flash_sound = pygame.mixer.Sound("audio/flash_sound.mp3") 
         self.flash_sound.set_volume(0.1)
+        self.flash_cd = 0
+        self.display_flash = False
+        self.display_timer = 0
+        self.flash_x = 0                                        # Location of where the player is flashing from on the x-axis.
+        self.flash_y = 0                                        # Location of where the player is flashing from on the y-axis.
+
+        # Sprite/image/Screen related variables
         self.bullet_sprite_group = bullet_sprite_group
         self.sprites_group = sprites_group
         self.position = pygame.math.Vector2(START_X, START_Y)   # Current player location.
@@ -19,16 +28,14 @@ class Player(pygame.sprite.Sprite):
         self.hitbox = self.base_image.get_rect(center = self.position)  # Both rects exist for hitbox information purposes.
         self.rect = self.hitbox.copy()
         self.speed = PLAYER_SPEED                               # Player's current speed.
-        self.flash_cd = 0                                       # Cooldown of the flash ability.
-        self.display_flash = False                              # Variable for displaying the flash animation.
-        self.display_timer = 0                                  # Timer for how long the flash animation stays on screen.
         self.screen = screen                                    # Game window.
-        self.flash_x = 0                                        # Location of where the player is flashing from on the x-axis.
-        self.flash_y = 0                                        # Location of where the player is flashing from on the y-axis.
 
+        # Shooting related variables
         self.fire = False
         self.shoot_cd = 0
         self.gun_offset = pygame.math.Vector2(OFFSET_X, OFFSET_Y)
+        self.bullet_speed = bullet_speed
+        self.bullet_allowed_time = bullet_allowed_time
 
 
     def player_rotation(self):  # Method responsible for rotating player icon in relation to the mouse
@@ -39,7 +46,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.base_image, -self.angle)
         self.rect = self.image.get_rect(center = self.hitbox.center)
 
-    def player_input_wasd(self):    # Method responsible for handling wasd movement of the player.
+    def player_character_inputs(self):    # Method responsible for player movement and shooting.
         self.x_movement = 0
         self.y_movement = 0
 
@@ -67,15 +74,12 @@ class Player(pygame.sprite.Sprite):
         if self.shoot_cd == 0:
             self.shoot_cd = SHOOT_CD
             start_point = self.position + self.gun_offset.rotate(self.angle)
-            self.bullet = Bullet(start_point.x, start_point.y, self.angle)
+            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time)
             self.bullet_sprite_group.add(self.bullet)
             self.sprites_group.add(self.bullet)
 
 
-        
-
-
-    def flash_cooldown(self):       # Method for timing the cooldown of the flash ability.
+    def flash_timer(self):       # Method for timing the cooldown of the flash ability.
         if self.flash_cd >= 500:
             self.flash_cd = 0
         elif self.flash_cd > 0:
@@ -100,7 +104,7 @@ class Player(pygame.sprite.Sprite):
 
     
     def player_input_flash(self):   # Method which handles the user input for flash (f).
-        self.flash_cooldown()
+        self.flash_timer()
 
         input = pygame.key.get_pressed()    # Retrieves the key presses.
         x, y = pygame.mouse.get_pos()       # Retrieves the current position of the mouse.
@@ -123,7 +127,7 @@ class Player(pygame.sprite.Sprite):
             self.flash_cd = 1
 
     def register_player_inputs(self):
-        self.player_input_wasd()
+        self.player_character_inputs()
         self.update_flash()
         self.player_input_flash()
         self.position += pygame.math.Vector2(self.x_movement, self.y_movement)

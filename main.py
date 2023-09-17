@@ -1,7 +1,7 @@
 import pygame
 import math
 from keys import *
-from Player import *
+from Lucian import *
 
 # Initialize window
 pygame.init()
@@ -21,7 +21,7 @@ flash_icon_grey = pygame.image.load('Images/flash_grey.png').convert()
 bullet_sprite_group = pygame.sprite.Group()
 sprites_group = pygame.sprite.Group()
 
-player = Player(gameDisplay, bullet_sprite_group, sprites_group)
+player = Lucian(gameDisplay, bullet_sprite_group, sprites_group)
 
 sprites_group.add(player)
 
@@ -37,6 +37,12 @@ while not exit:
         gameDisplay.blit(flash_icon, (1100, 600))
     else:
         gameDisplay.blit(flash_icon_grey, (1100, 600))
+    
+    if player.ability_1_cd == 0:
+        gameDisplay.blit(player.ability_1_image, (1000, 600))
+    else:
+        gameDisplay.blit(player.ability_1_image_grey, (1000, 600))
+        
     sprites_group.draw(gameDisplay)
     sprites_group.update()
     pygame.display.update()

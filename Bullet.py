@@ -4,7 +4,7 @@ from keys import *
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, angle):
+    def __init__(self, x, y, angle, bullet_speed, allowed_time):
         super().__init__()
         self.image = pygame.image.load("images/bullet1.png").convert_alpha()
         self.image = pygame.transform.rotozoom(self.image, 0, 1)
@@ -13,10 +13,10 @@ class Bullet(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.angle = angle
-        self.bullet_speed = BULLET_SPEED
+        self.bullet_speed = bullet_speed
         self.x_bullet_speed = math.cos(self.angle * (2*math.pi/360)) * self.bullet_speed
         self.y_bullet_speed = math.sin(self.angle * (2*math.pi/360)) * self.bullet_speed
-        self.bullet_allowed_time = BULLET_TIME
+        self.bullet_allowed_time = allowed_time
         self.start_time = pygame.time.get_ticks()
 
 

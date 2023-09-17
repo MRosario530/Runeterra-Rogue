@@ -14,3 +14,5 @@ BULLET_SPEED = 30
 BULLET_TIME = 700
 OFFSET_X = 15
 OFFSET_Y = 0
+
+# Lucian Values:
