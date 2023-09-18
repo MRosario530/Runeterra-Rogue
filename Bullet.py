@@ -16,7 +16,7 @@ class Bullet(pygame.sprite.Sprite):
         self.bullet_speed = bullet_speed
         self.x_bullet_speed = math.cos(self.angle * (2*math.pi/360)) * self.bullet_speed
         self.y_bullet_speed = math.sin(self.angle * (2*math.pi/360)) * self.bullet_speed
-        self.bullet_allowed_time = allowed_time
+        self.bullet_duration = allowed_time
         self.start_time = pygame.time.get_ticks()
 
 
@@ -27,7 +27,7 @@ class Bullet(pygame.sprite.Sprite):
         self.x += self.x_bullet_speed
         self.y += self.y_bullet_speed
 
-        if pygame.time.get_ticks() - self.start_time > self.bullet_allowed_time:
+        if pygame.time.get_ticks() - self.start_time > self.bullet_duration:
             self.kill()
 
     def update(self):
