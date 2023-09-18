@@ -4,7 +4,10 @@ from keys import *
 from Lucian import *
 
 # Initialize window
+
+pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.init()
+pygame.mixer.init()
 
 gameDisplay = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Top-down project')
@@ -17,6 +20,9 @@ background = pygame.transform.scale(background,(WIDTH, HEIGHT))
 flash_icon = pygame.image.load('Images/flash.png').convert()
 flash_icon_grey = pygame.image.load('Images/flash_grey.png').convert()
 
+pygame.mixer.music.load("audio/SoLTheme.mp3")
+pygame.mixer.music.set_volume(0.05)
+pygame.mixer.music.play(-1)
 
 bullet_sprite_group = pygame.sprite.Group()
 sprites_group = pygame.sprite.Group()
@@ -38,10 +44,20 @@ while not exit:
     else:
         gameDisplay.blit(flash_icon_grey, (1100, 600))
     
-    if player.ability_1_cd == 0:
-        gameDisplay.blit(player.ability_1_image, (1000, 600))
+    if player.ability_ult_cd == 0:
+        gameDisplay.blit(player.ability_ult_image, (1000, 600))
     else:
-        gameDisplay.blit(player.ability_1_image_grey, (1000, 600))
+        gameDisplay.blit(player.ability_ult_image_grey, (1000, 600))
+
+    if player.ability_ult_cd == 0:
+        gameDisplay.blit(player.ability_ult_image, (1000, 600))
+    else:
+        gameDisplay.blit(player.ability_ult_image_grey, (1000, 600))
+
+    if player.ability_1_cd == 0:
+        gameDisplay.blit(player.ability_1_image, (900, 600))
+    else:
+        gameDisplay.blit(player.ability_1_image_grey, (900, 600))
         
     sprites_group.draw(gameDisplay)
     sprites_group.update()
