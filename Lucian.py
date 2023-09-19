@@ -19,10 +19,10 @@ class Lucian(Player):
 
         # Audio related assets.
         self.ability_1_sound = pygame.mixer.Sound("audio/lucqsound.mp3") 
-        self.ability_1_sound.set_volume(1)
+        self.ability_1_sound.set_volume(2)
 
         self.ability_ult_sound = pygame.mixer.Sound("audio/lucultsound.mp3") 
-        self.ability_ult_sound.set_volume(1)
+        self.ability_ult_sound.set_volume(2)
 
 
         # Bullet/Basic firing related variables.

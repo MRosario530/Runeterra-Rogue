@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         # Flash ability related variables
         self.flash_particles = pygame.transform.scale(pygame.image.load("images/flash_particles.png").convert_alpha(),(PLAYER_WIDTH, PLAYER_HEIGHT))
         self.flash_sound = pygame.mixer.Sound("audio/flash_sound.mp3") 
-        self.flash_sound.set_volume(0.1)
+        self.flash_sound.set_volume(0.01)
         self.flash_cd = 0
         self.display_flash = False
         self.display_timer = 0
