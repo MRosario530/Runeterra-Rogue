@@ -40,8 +40,8 @@ class Player(pygame.sprite.Sprite):
 
     def player_rotation(self):  # Method responsible for rotating player icon in relation to the mouse
         mouse_pos = pygame.mouse.get_pos()       
-        x_rotation = (mouse_pos[0] - self.hitbox.centerx)
-        y_rotation = (mouse_pos[1] - self.hitbox.centery)
+        x_rotation = (mouse_pos[0] - WIDTH // 2)
+        y_rotation = (mouse_pos[1] - HEIGHT // 2)
         self.angle = math.degrees(math.atan2(y_rotation, x_rotation))
         self.image = pygame.transform.rotate(self.base_image, -self.angle)
         self.rect = self.image.get_rect(center = self.hitbox.center)
@@ -115,6 +115,8 @@ class Player(pygame.sprite.Sprite):
             self.flash_x = self.hitbox.centerx
             self.flash_y = self.hitbox.centery
             self.show_flash()
+            print(self.flash_x, self.flash_y)
+            print(x, y)
             if x - self.flash_x > FLASH_DISTANCE:
                 x = self.flash_x + FLASH_DISTANCE
             elif x - self.flash_x < -FLASH_DISTANCE:
@@ -122,7 +124,8 @@ class Player(pygame.sprite.Sprite):
             if y - self.flash_y > FLASH_DISTANCE:
                 y = self.flash_y + FLASH_DISTANCE
             elif y - self.flash_y < -FLASH_DISTANCE:
-                y = self.flash_y - FLASH_DISTANCE 
+                y = self.flash_y - FLASH_DISTANCE
+            print(self.position)
             self.position = pygame.math.Vector2(x, y) # Note - This ability has not been updated to have a circular range - rather, it is more like a square.
             self.flash_cd = 1
 
