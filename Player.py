@@ -11,8 +11,11 @@ class Player(pygame.sprite.Sprite):
         self.image = char_image     
 
         # Flash ability related variables
+        self.flash_sprite = pygame.sprite.Sprite()
         self.flash_particles = pygame.transform.scale(pygame.image.load("images/flash_particles.png").convert_alpha(),(PLAYER_WIDTH, PLAYER_HEIGHT))
+        self.flash_sprite.image = self.flash_particles
         self.flash_sound = pygame.mixer.Sound("audio/flash_sound.mp3") 
+        self.flash_sprite.rect = self.flash_particles.get_rect()
         self.flash_sound.set_volume(0.01)
         self.flash_cd = 0
         self.display_flash = False
@@ -88,7 +91,11 @@ class Player(pygame.sprite.Sprite):
     def draw_flash(self):           # Method which displays and fades away the flash ability.
         if self.display_flash:
             self.flash_particles.set_alpha(2.5 * self.display_timer)
-            self.screen.blit(self.flash_particles, (self.flash_x - 0.5*PLAYER_WIDTH, self.flash_y - 0.5*PLAYER_HEIGHT))
+            self.flash_sprite.rect.x = self.flash_x - 0.5*PLAYER_WIDTH
+            self.flash_sprite.rect.y = self.flash_y - 0.5*PLAYER_HEIGHT
+            self.flash_sprite.image = self.flash_particles
+            self.sprites_group.add(self.flash_sprite)
+
     
     def update_flash(self):         # Method which continuously updates the variables relating to flash.
         if self.display_flash:
@@ -114,25 +121,27 @@ class Player(pygame.sprite.Sprite):
             pygame.mixer.Sound.play(self.flash_sound)
             self.flash_x = self.hitbox.centerx
             self.flash_y = self.hitbox.centery
-            self.show_flash()
-            print(self.flash_x, self.flash_y)
-            print(x, y)
-            if x - self.flash_x > FLASH_DISTANCE:
+            if x - (WIDTH // 2) > FLASH_DISTANCE:
                 x = self.flash_x + FLASH_DISTANCE
-            elif x - self.flash_x < -FLASH_DISTANCE:
+            elif x - (WIDTH // 2) < -FLASH_DISTANCE:
                 x = self.flash_x - FLASH_DISTANCE 
-            if y - self.flash_y > FLASH_DISTANCE:
+            else:
+                x = x - (WIDTH // 2) + self.flash_x
+                
+            if y - (HEIGHT // 2) > FLASH_DISTANCE:
                 y = self.flash_y + FLASH_DISTANCE
-            elif y - self.flash_y < -FLASH_DISTANCE:
+            elif y - (HEIGHT // 2) < -FLASH_DISTANCE:
                 y = self.flash_y - FLASH_DISTANCE
-            print(self.position)
+            else:
+                y = y - (HEIGHT // 2) + self.flash_y
             self.position = pygame.math.Vector2(x, y) # Note - This ability has not been updated to have a circular range - rather, it is more like a square.
+            self.show_flash()
             self.flash_cd = 1
 
     def register_player_inputs(self):
-        self.player_character_inputs()
-        self.update_flash()
         self.player_input_flash()
+        self.update_flash()
+        self.player_character_inputs()
         self.position += pygame.math.Vector2(self.x_movement, self.y_movement)
 
 
