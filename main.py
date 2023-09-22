@@ -3,6 +3,7 @@ import math
 from keys import *
 from Lucian import *
 from Camera import *
+from Enemy import *
 
 # Initialize window
 
@@ -27,10 +28,13 @@ pygame.mixer.music.play(-1)
 
 bullet_sprite_group = pygame.sprite.Group()
 sprites_group = pygame.sprite.Group()
+enemy_group = pygame.sprite.Group()
 
 player = Lucian(screen, bullet_sprite_group, sprites_group)
 camera = Camera(player, sprites_group, screen, background)
+cannon = Enemy(enemy_group, sprites_group, (400,400), player)
 sprites_group.add(player)
+
 
 while not exit:
     input = pygame.key.get_pressed()
