@@ -17,3 +17,9 @@ OFFSET_Y = 0
 
 # Lucian Values:
 AB_1_ACTIVE = 30
+
+
+# Enemy Base Values:
+ENEMY_SHOOT_CD = 20
+ENEMY_BULLET_TIME = 1000
+ENEMY_BULLET_SPEED = 40

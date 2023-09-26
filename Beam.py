@@ -4,7 +4,7 @@ from keys import *
 
 
 class Beam(pygame.sprite.Sprite):
-    def __init__(self, beam_image, pivot, angle, duration, offset):
+    def __init__(self, beam_image, pivot, angle, duration, offset, target_group):
         super().__init__()
         self.angle = angle
         self.pivot = pivot
@@ -15,6 +15,7 @@ class Beam(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = pivot + self.rotated_offset)
         self.ability_duration = duration
         self.start_time = pygame.time.get_ticks()
+        self.target_group = target_group
 
     
     def beam_travel(self):
@@ -23,5 +24,13 @@ class Beam(pygame.sprite.Sprite):
         if pygame.time.get_ticks() - self.start_time > self.ability_duration:
             self.kill()
 
+    def bullet_collision(self):
+        # collisions = pygame.sprite.spritecollide(, self.target_group, False, False)
+
+        # for collision in collisions:
+            # collision.hp -= 10
+        pass
+
     def update(self):
+        # self.bullet_collision()
         self.beam_travel()

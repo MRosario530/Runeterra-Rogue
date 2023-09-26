@@ -5,7 +5,7 @@ from keys import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, screen, bullet_sprite_group, sprites_group, char_image, bullet_speed, bullet_allowed_time):
+    def __init__(self, screen, ally_bullet_group, sprites_group, char_image, bullet_speed, bullet_allowed_time, enemy_group):
         super().__init__()
         # Character Image
         self.image = char_image     
@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.flash_y = 0                                        # Location of where the player is flashing from on the y-axis.
 
         # Sprite/image/Screen related variables
-        self.bullet_sprite_group = bullet_sprite_group
+        self.ally_bullet_group = ally_bullet_group
         self.sprites_group = sprites_group
         self.position = pygame.math.Vector2(START_X, START_Y)   # Current player location.
         self.base_image = self.image    # Base image saved for rotation purposes.
@@ -32,6 +32,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.hitbox.copy()
         self.speed = PLAYER_SPEED                               # Player's current speed.
         self.screen = screen                                    # Game window.
+        self.enemy_group = enemy_group
+        self.angle = 0
 
         # Shooting related variables
         self.fire = False
@@ -40,6 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.bullet_speed = bullet_speed
         self.bullet_allowed_time = bullet_allowed_time
 
+        self.hp = 100
 
     def player_rotation(self):  # Method responsible for rotating player icon in relation to the mouse
         mouse_pos = pygame.mouse.get_pos()       
@@ -69,16 +72,16 @@ class Player(pygame.sprite.Sprite):
 
         if pygame.mouse.get_pressed() == (1, 0, 0):
             self.fire = True
-            self.firing()
+            self.attack()
         else:
             self.fire = False
         
-    def firing(self):
+    def attack(self):
         if self.shoot_cd == 0:
             self.shoot_cd = SHOOT_CD
             start_point = self.position + self.gun_offset.rotate(self.angle)
-            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time)
-            self.bullet_sprite_group.add(self.bullet)
+            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.ally_bullet_group, self.enemy_group)
+            self.ally_bullet_group.add(self.bullet)
             self.sprites_group.add(self.bullet)
 
 
