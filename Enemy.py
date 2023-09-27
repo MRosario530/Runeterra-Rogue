@@ -20,7 +20,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.enemy_direction = pygame.math.Vector2()
         self.enemy_velocity = pygame.math.Vector2()
-        self.enemy_speed = 5
+        self.enemy_speed = 2
 
         self.position = pygame.math.Vector2(pos)
         self.player = player

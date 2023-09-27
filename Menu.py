@@ -114,7 +114,6 @@ class Menu():
         pygame.time.set_timer(timer, 1000)
 
         level = Level(self.enemy_group, self.all_sprites_group, player, self.player_group, self.enemy_bullet_group)
-        Enemy(self.enemy_group, self.all_sprites_group, (random.randint(0, 4320), random.randint(0, 2280)), player, self.player_group, self.enemy_bullet_group)
 
         while not exit:
             for event in pygame.event.get():
@@ -162,20 +161,27 @@ class Menu():
 
 
     def game_over_screen(self):
+        restart_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(600, 600), text_input="MENU", font=base_font, button_color="blue", button_hover_color="white")
         self.enemy_bullet_group.empty()
         self.ally_bullets.empty()
         self.all_sprites_group.empty()
         self.enemy_group.empty()
         self.player_group.empty()
-        print("We are here")
         exit = False
         while not exit:
             self.screen.fill("black")
+            mouse_pos = pygame.mouse.get_pos()    
+            restart_button.changeColor(mouse_pos)
+            restart_button.update(self.screen)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit = True
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if restart_button.checkForInput(mouse_pos):
+                        self.start_screen()
+            pygame.display.update()
 
 
 
