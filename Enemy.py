@@ -54,7 +54,7 @@ class Enemy(pygame.sprite.Sprite):
             rads = math.atan2(dy,dx)
             degs = math.degrees(rads)
 
-            self.bullet = Bullet(start_point.x, start_point.y, degs, ENEMY_BULLET_SPEED, ENEMY_BULLET_TIME, self.enemy_bullet_group, self.player_group)
+            self.bullet = Bullet(start_point.x, start_point.y, degs, ENEMY_BULLET_SPEED, ENEMY_BULLET_TIME)
             self.enemy_bullet_group.add(self.bullet)
             self.all_sprites_group.add(self.bullet)
 

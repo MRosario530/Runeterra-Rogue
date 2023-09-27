@@ -24,12 +24,11 @@ class Beam(pygame.sprite.Sprite):
         if pygame.time.get_ticks() - self.start_time > self.ability_duration:
             self.kill()
 
-    def beam_collision(self):
-        collisions = pygame.sprite.spritecollide(self.rect, self.target_group, False, False)
+    def beam_collision(self, beam):
+        collisions = pygame.sprite.spritecollide(beam, self.target_group, False)
 
         for collision in collisions:
             collision.hp -= 10
 
     def update(self):
-        self.beam_collision()
         self.beam_travel()

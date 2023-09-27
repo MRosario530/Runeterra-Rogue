@@ -64,6 +64,7 @@ class Lucian(Player):
             self.can_move = True
         elif self.ability_1_duration > 0:
             self.ability_1_duration += 1
+            self.beam.beam_collision(self.beam)
 
 
     def ability_ult_cd_timer(self):
@@ -109,13 +110,13 @@ class Lucian(Player):
     def ability_ult_firing(self):
         if self.ability_ult_duration % 2 == 0 and self.ability_ult_active == True:
             start_point = self.position + self.gun_offset.rotate(self.angle)
-            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.bullet_group, self.enemy_group)
+            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time)
             self.bullet_group.add(self.bullet)
             self.sprites_group.add(self.bullet)
 
         elif self.ability_ult_duration % 2 == 1 and self.ability_ult_active == True:
             start_point2 = self.position + self.gun_offset2.rotate(self.angle)
-            self.bullet2 = Bullet(start_point2.x, start_point2.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.bullet_group, self.enemy_group)
+            self.bullet2 = Bullet(start_point2.x, start_point2.y, self.angle, self.bullet_speed, self.bullet_allowed_time)
             self.bullet_group.add(self.bullet2)
             self.sprites_group.add(self.bullet2)
 

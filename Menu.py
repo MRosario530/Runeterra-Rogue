@@ -8,6 +8,7 @@ from Lucian import *
 from Camera import *
 from Enemy import *
 from Level import *
+from Collisions import *
 
 pygame.font.init()
 base_font = pygame.font.SysFont("cambria", 50)
@@ -27,7 +28,7 @@ class Menu():
         self.flash_icon_grey = pygame.image.load('Images/flash_grey.png').convert()
 
         self.enemy_bullet_group = pygame.sprite.Group()
-        self.ally_bullets = pygame.sprite.Group()
+        self.ally_bullet_group = pygame.sprite.Group()
         self.all_sprites_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
         self.player_group = pygame.sprite.Group()
@@ -94,7 +95,7 @@ class Menu():
                         if Lucian_button.checkForInput(mouse_pos):
                             play_button_display = True
                             current_character_text = "Lucian"
-                            current_character = Lucian(self.screen, self.ally_bullets, self.all_sprites_group, self.enemy_group)
+                            current_character = Lucian(self.screen, self.ally_bullet_group, self.all_sprites_group, self.enemy_group)
                         if back_button.checkForInput(mouse_pos):
                             self.start_screen()
                         if play_button.checkForInput(mouse_pos):
@@ -114,6 +115,7 @@ class Menu():
         pygame.time.set_timer(timer, 1000)
 
         level = Level(self.enemy_group, self.all_sprites_group, player, self.player_group, self.enemy_bullet_group)
+        check_collides = Collisions(self.ally_bullet_group, self.enemy_bullet_group, self.player_group, self.enemy_group)
 
         while not exit:
             for event in pygame.event.get():
@@ -151,19 +153,19 @@ class Menu():
             else:
                 self.screen.blit(player.ability_1_image_grey, (900, 600))
 
+            check_collides.check_ally_shots()
+            check_collides.check_enemy_shots()
             if (len(self.player_group.sprites()) == 0):
                 self.game_over_screen()
-
 
             self.all_sprites_group.update()
             pygame.display.update()
             self.clock.tick(FRAME_RATE)
 
-
     def game_over_screen(self):
         restart_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(600, 600), text_input="MENU", font=base_font, button_color="blue", button_hover_color="white")
         self.enemy_bullet_group.empty()
-        self.ally_bullets.empty()
+        self.ally_bullet_group.empty()
         self.all_sprites_group.empty()
         self.enemy_group.empty()
         self.player_group.empty()

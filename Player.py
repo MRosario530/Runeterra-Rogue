@@ -80,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         if self.shoot_cd == 0:
             self.shoot_cd = SHOOT_CD
             start_point = self.position + self.gun_offset.rotate(self.angle)
-            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.ally_bullet_group, self.enemy_group)
+            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time)
             self.ally_bullet_group.add(self.bullet)
             self.sprites_group.add(self.bullet)
 
