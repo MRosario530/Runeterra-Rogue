@@ -9,6 +9,7 @@ from Camera import *
 from Enemy import *
 from Level import *
 from Collisions import *
+from UI import *
 
 pygame.font.init()
 base_font = pygame.font.SysFont("cambria", 50)
@@ -63,13 +64,17 @@ class Menu():
             pygame.display.update()
         
     def character_select(self):
-
+        center_image_display = False
+        center_image = None
         play_button_display = False
         Lucian_button = Button(image=pygame.image.load("images/LucianSquare.png"), pos=(600, 600), text_input="", font=base_font, button_color="blue", button_hover_color="white")
         play_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(1000, 600), text_input="PLAY", font=base_font, button_color="blue", button_hover_color="white")
         back_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(200, 600), text_input="BACK", font=base_font, button_color="blue", button_hover_color="white")
+
+        Lucian_image = pygame.image.load("images/Lucian_splash.png")
         current_character_text = ""
         current_character = None
+
         while True:
             mouse_pos = pygame.mouse.get_pos()
             self.screen.blit(self.character_select_bg, (0,0))
@@ -87,6 +92,9 @@ class Menu():
                 play_button.changeColor(mouse_pos)
                 play_button.update(self.screen)
 
+            if center_image_display == True:
+                self.screen.blit(center_image, center_image.get_rect(center=(600,350)))
+
             for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -94,8 +102,10 @@ class Menu():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if Lucian_button.checkForInput(mouse_pos):
                             play_button_display = True
+                            center_image_display = True
                             current_character_text = "Lucian"
                             current_character = Lucian(self.screen, self.ally_bullet_group, self.all_sprites_group, self.enemy_group)
+                            center_image = Lucian_image
                         if back_button.checkForInput(mouse_pos):
                             self.start_screen()
                         if play_button.checkForInput(mouse_pos):
@@ -104,8 +114,9 @@ class Menu():
 
     def play(self, character):
         exit = False
-
         player = character
+        userinterface = UI(player)
+
         camera = Camera(player, self.all_sprites_group, self.screen, self.background)
         self.all_sprites_group.add(player)
         self.player_group.add(player)
@@ -132,6 +143,8 @@ class Menu():
 
             self.screen.blit(self.background, (0,0))
             camera.camera_draw()
+            userinterface.update(self.screen)
+
 
             if player.flash_cd == 0:
                 self.screen.blit(self.flash_icon, (1100, 600))

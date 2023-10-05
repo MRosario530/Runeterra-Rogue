@@ -1,0 +1,10 @@
+name,hp,attack_damage,ability_power,armor,magic_resist,image,item_description
+Infinity Edge,0,65,0,0,0,image,Amplifies Physical and Critical Damage
+Runaan's Hurricane,0,0,0,0,0,image,Splits Basic Attacks into Bolts
+Black Cleaver,400,50,0,0,0,image,Consistently Shreds Enemy Armor
+Rabadon's Deathcap,0,120,0,0,0,image,Heavily Amplifies Ability Power
+Void Staff,0,65,0,0,0,image,Ignores a % Amount of Magic Resist
+Cosmic Drive,0,100,0,0,0,image,Amplifies Cooldown Reduction
+Warmog's Armor,800,0,0,0,0,image,Large Amount of HP and Health Regen
+Thornmail,350,0,0,70,0,image,Thorns Damage to Opponents
+Sprit Visage,450,0,0,0,60,Grants Magic Resist and Amps Healing

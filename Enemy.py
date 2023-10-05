@@ -26,9 +26,16 @@ class Enemy(pygame.sprite.Sprite):
         self.player = player
 
         self.player_pos = pygame.math.Vector2(self.player.hitbox.center)
-        self.hp = 100
 
         self.shoot_cd = ENEMY_SHOOT_CD
+
+        # Enemy stats (should be overridden for each character)
+        self.hp = 100
+        self.attack_damage = 50
+        self.ability_power = 0
+        self.armor = 20
+        self.magic_resist = 20
+        self.cooldown_reduction = 0
 
 
     def aggro(self):
@@ -54,7 +61,7 @@ class Enemy(pygame.sprite.Sprite):
             rads = math.atan2(dy,dx)
             degs = math.degrees(rads)
 
-            self.bullet = Bullet(start_point.x, start_point.y, degs, ENEMY_BULLET_SPEED, ENEMY_BULLET_TIME)
+            self.bullet = Bullet(start_point.x, start_point.y, degs, ENEMY_BULLET_SPEED, ENEMY_BULLET_TIME, self.attack_damage)
             self.enemy_bullet_group.add(self.bullet)
             self.all_sprites_group.add(self.bullet)
 

@@ -46,11 +46,21 @@ class Lucian(Player):
         self.ability_1_active = True
         self.ability_1_offset = pygame.math.Vector2(35, 0)
 
-        super().__init__(screen, self.bullet_group, sprites_group, self.char_image, self.bullet_speed, self.bullet_allowed_time, self.enemy_group)
+        # Player stats (should be overridden for each character)
+        self.hp = 1200
+        self.attack_damage = 70
+        self.ability_power = 0
+        self.armor = 30
+        self.magic_resist = 30
+        self.cooldown_reduction = 0
+        self.crit_chance = 0
+
+        super().__init__(screen, self.bullet_group, sprites_group, self.char_image, self.bullet_speed, self.bullet_allowed_time, self.enemy_group, 
+                         self.hp, self.attack_damage, self.ability_power, self.armor, self.magic_resist, self.cooldown_reduction, self.crit_chance)
 
 
     def ability_1_cd_timer(self):
-        if self.ability_1_cd >= 150:
+        if self.ability_1_cd >= (150*(1-(self.cooldown_reduction/100))):
             self.ability_1_cd = 0
         elif self.ability_1_cd > 0:
             self.ability_1_cd += 1
@@ -68,7 +78,7 @@ class Lucian(Player):
 
 
     def ability_ult_cd_timer(self):
-        if self.ability_ult_cd >= 500:
+        if self.ability_ult_cd >= (500*(1-(self.cooldown_reduction/100))):
             self.ability_ult_cd = 0
         elif self.ability_ult_cd > 0:
             self.ability_ult_cd += 1
@@ -110,13 +120,13 @@ class Lucian(Player):
     def ability_ult_firing(self):
         if self.ability_ult_duration % 2 == 0 and self.ability_ult_active == True:
             start_point = self.position + self.gun_offset.rotate(self.angle)
-            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time)
+            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage)
             self.bullet_group.add(self.bullet)
             self.sprites_group.add(self.bullet)
 
         elif self.ability_ult_duration % 2 == 1 and self.ability_ult_active == True:
             start_point2 = self.position + self.gun_offset2.rotate(self.angle)
-            self.bullet2 = Bullet(start_point2.x, start_point2.y, self.angle, self.bullet_speed, self.bullet_allowed_time)
+            self.bullet2 = Bullet(start_point2.x, start_point2.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage)
             self.bullet_group.add(self.bullet2)
             self.sprites_group.add(self.bullet2)
 
