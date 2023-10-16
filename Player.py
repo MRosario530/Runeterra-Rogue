@@ -52,6 +52,8 @@ class Player(pygame.sprite.Sprite):
         self.cooldown_reduction = cooldown_reduction
         self.crit_chance = crit_chance
 
+        self.inventory
+
     def player_rotation(self):  # Method responsible for rotating player icon in relation to the mouse
         mouse_pos = pygame.mouse.get_pos()       
         x_rotation = (mouse_pos[0] - WIDTH // 2)
@@ -163,3 +165,11 @@ class Player(pygame.sprite.Sprite):
         self.player_rotation()
         if self.shoot_cd > 0:
             self.shoot_cd -= 1
+
+    def updateStats(self, item):
+        self.hp += item.hp
+        self.attack_damage += item.attack_damage
+        self.ability_power += item.ability_power
+        self.armor += item.armor
+        self.magic_resist += item.magic_resist
+        self.cooldown_reduction += item.cooldown_reduction

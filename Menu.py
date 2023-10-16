@@ -1,7 +1,6 @@
 # Character select background photo by Mudassir Ali: https://www.pexels.com/photo/blue-wallpaper-2680270/
 
-import pygame, sys
-import math
+import pygame, sys, csv, random
 from Button import *
 from keys import *
 from Lucian import *
@@ -10,10 +9,13 @@ from Enemy import *
 from Level import *
 from Collisions import *
 from UI import *
+from Item import *
 
 pygame.font.init()
 base_font = pygame.font.SysFont("cambria", 50)
 character_font = pygame.font.SysFont("times new roman", 70)
+item_font = pygame.font.SysFont("cambria", 22)
+
 isAlive = False
 
 class Menu():
@@ -35,10 +37,21 @@ class Menu():
         self.player_group = pygame.sprite.Group()
 
 
+    def loadItems(self):
+        with open('item.csv', 'r') as csv_file:
+            self.items = []
+            reader = csv.reader(csv_file)
+            next(reader, None)
+            for row in reader:
+                item = Item(row[0], int(row[1]), int(row[2]), int(row[3]), int(row[4]), int(row[5]), int(row[6]), pygame.image.load(row[7]), row[8])
+                self.items.append(item)
+            csv_file.close()
+
+
     def start_screen(self):
         play_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(600, 300), text_input="PLAY", font=base_font, button_color="blue", button_hover_color="white")
         quit_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(600, 450), text_input="QUIT", font=base_font, button_color="blue", button_hover_color="white")
-
+        self.loadItems()
         while True:
             self.screen.blit(self.menu_bg, (0,0))
             mouse_pos = pygame.mouse.get_pos()
@@ -114,18 +127,18 @@ class Menu():
 
     def play(self, character):
         exit = False
-        player = character
-        userinterface = UI(player)
+        self.player = character
+        userinterface = UI(self.player)
 
-        camera = Camera(player, self.all_sprites_group, self.screen, self.background)
-        self.all_sprites_group.add(player)
-        self.player_group.add(player)
+        camera = Camera(self.player, self.all_sprites_group, self.screen, self.background)
+        self.all_sprites_group.add(self.player)
+        self.player_group.add(self.player)
 
         timer_sec = 0
         timer = pygame.USEREVENT + 1                                     
         pygame.time.set_timer(timer, 1000)
 
-        level = Level(self.enemy_group, self.all_sprites_group, player, self.player_group, self.enemy_bullet_group)
+        level = Level(self.enemy_group, self.all_sprites_group, self.player, self.player_group, self.enemy_bullet_group)
         check_collides = Collisions(self.ally_bullet_group, self.enemy_bullet_group, self.player_group, self.enemy_group)
 
         while not exit:
@@ -137,6 +150,9 @@ class Menu():
                 if event.type == timer:
                     if timer_sec % 5 == 0 :
                         level.update(timer_sec)
+                        if timer_sec % 10 == 0 and timer_sec != 0:
+                            self.item_choice_screen(self.player)
+                            userinterface.update(self.screen)
                         timer_sec += 1
                     else:
                         timer_sec += 1
@@ -146,25 +162,25 @@ class Menu():
             userinterface.update(self.screen)
 
 
-            if player.flash_cd == 0:
+            if self.player.flash_cd == 0:
                 self.screen.blit(self.flash_icon, (1100, 600))
             else:
                 self.screen.blit(self.flash_icon_grey, (1100, 600))
             
-            if player.ability_ult_cd == 0:
-                self.screen.blit(player.ability_ult_image, (1000, 600))
+            if self.player.ability_ult_cd == 0:
+                self.screen.blit(self.player.ability_ult_image, (1000, 600))
             else:
-                self.screen.blit(player.ability_ult_image_grey, (1000, 600))
+                self.screen.blit(self.player.ability_ult_image_grey, (1000, 600))
 
-            if player.ability_ult_cd == 0:
-                self.screen.blit(player.ability_ult_image, (1000, 600))
+            if self.player.ability_ult_cd == 0:
+                self.screen.blit(self.player.ability_ult_image, (1000, 600))
             else:
-                self.screen.blit(player.ability_ult_image_grey, (1000, 600))
+                self.screen.blit(self.player.ability_ult_image_grey, (1000, 600))
 
-            if player.ability_1_cd == 0:
-                self.screen.blit(player.ability_1_image, (900, 600))
+            if self.player.ability_1_cd == 0:
+                self.screen.blit(self.player.ability_1_image, (900, 600))
             else:
-                self.screen.blit(player.ability_1_image_grey, (900, 600))
+                self.screen.blit(self.player.ability_1_image_grey, (900, 600))
 
             check_collides.check_ally_shots()
             check_collides.check_enemy_shots()
@@ -197,6 +213,52 @@ class Menu():
                     if restart_button.checkForInput(mouse_pos):
                         self.start_screen()
             pygame.display.update()
+
+    def item_choice_screen(self, player):
+        current_item_choices = []
+        current_item_choices.append(random.choice(self.items))
+        current_item_choices.append(random.choice(self.items))
+        current_item_choices.append(random.choice(self.items))
+
+        item1_button = Button(image=pygame.image.load("images/item_button.png"), pos=(300, 350), text_input=current_item_choices[0].name, font=item_font, button_color="grey", button_hover_color="white")
+        item2_button = Button(image=pygame.image.load("images/item_button.png"), pos=(600, 350), text_input=current_item_choices[1].name, font=item_font, button_color="grey", button_hover_color="white")
+        item3_button = Button(image=pygame.image.load("images/item_button.png"), pos=(900, 350), text_input=current_item_choices[2].name, font=item_font, button_color="grey", button_hover_color="white")
+
+        while True:
+            mouse_pos = pygame.mouse.get_pos()
+            self.screen.fill("#082430")
+            title_text = character_font.render("Select your item!", True, "White")
+            text_rect = title_text.get_rect(center=(600,100))
+
+            self.screen.blit(title_text, text_rect)
+
+            for button in [item1_button, item2_button, item3_button]:
+                button.changeColor(mouse_pos)
+                button.update(self.screen)
+
+            self.screen.blit(current_item_choices[0].image, (286, 275))
+            self.screen.blit(current_item_choices[1].image, (586, 275))
+            self.screen.blit(current_item_choices[2].image, (886, 275))
+
+            for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if item1_button.checkForInput(mouse_pos):
+                            self.player.updateStats(current_item_choices[0])
+                            return
+                        if item2_button.checkForInput(mouse_pos):
+                            self.player.updateStats(current_item_choices[1])
+                            return
+                        if item3_button.checkForInput(mouse_pos):
+                            self.player.updateStats(current_item_choices[2])
+                            return
+
+            pygame.display.update()
+
+
+
 
 
 

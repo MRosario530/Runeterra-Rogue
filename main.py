@@ -4,6 +4,7 @@ from Lucian import *
 from Camera import *
 from Enemy import *
 from Level import *
+from Item import *
 from Menu import *
 
 # Initialize window
@@ -21,6 +22,8 @@ pygame.mixer.music.set_volume(0.01)
 pygame.mixer.music.play(-1)
 
 menu = Menu(screen, clock)
+
+    
 menu.start_screen()
 
 pygame.quit()

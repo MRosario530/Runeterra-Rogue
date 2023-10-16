@@ -38,6 +38,14 @@ class UI():
 
 
     def stats_update(self, screen):
+
+        self.adtext = self.base_font.render(str(self.player.attack_damage), True, "yellow")
+        self.armortext = self.base_font.render(str(self.player.armor), True, "yellow")
+        self.crittext = self.base_font.render(str(self.player.crit_chance), True, "yellow")
+        self.aptext = self.base_font.render(str(self.player.ability_power), True, "yellow")
+        self.mrtext = self.base_font.render(str(self.player.magic_resist), True, "yellow")
+        self.cdrtext = self.base_font.render(str(self.player.cooldown_reduction), True, "yellow")
+
         screen.blit(self.stats_image, self.statsrect)
         screen.blit(self.adtext, self.adtext_rect)
         screen.blit(self.armortext, self.armortext_rect)

@@ -13,3 +13,5 @@ class Item(pygame.sprite.Sprite):
         self.magic_resist = magic_resist
         self.cooldown_reduction = cooldown_reduction
         self.item_description = item_description
+
+
