@@ -18,7 +18,7 @@ item_font = pygame.font.SysFont("cambria", 22)
 
 isAlive = False
 
-class Menu():
+class Controller():
     def __init__(self, screen, clock):
         super().__init__()
         self.menu_bg = pygame.transform.scale(pygame.image.load("images/demacia_splash.jpeg"),(WIDTH, HEIGHT))
@@ -43,7 +43,7 @@ class Menu():
             reader = csv.reader(csv_file)
             next(reader, None)
             for row in reader:
-                item = Item(row[0], int(row[1]), int(row[2]), int(row[3]), int(row[4]), int(row[5]), int(row[6]), pygame.image.load(row[7]), row[8])
+                item = Item(row[0], int(row[1]), int(row[2]), int(row[3]), int(row[4]), int(row[5]), int(row[6]), int(row[7]), pygame.image.load(row[8]), row[9])
                 self.items.append(item)
             csv_file.close()
 
@@ -151,8 +151,7 @@ class Menu():
                     if timer_sec % 5 == 0 :
                         level.update(timer_sec)
                         if timer_sec % 10 == 0 and timer_sec != 0:
-                            self.item_choice_screen(self.player)
-                            userinterface.update(self.screen)
+                            self.item_choice_screen()
                         timer_sec += 1
                     else:
                         timer_sec += 1
@@ -214,7 +213,7 @@ class Menu():
                         self.start_screen()
             pygame.display.update()
 
-    def item_choice_screen(self, player):
+    def item_choice_screen(self):
         current_item_choices = []
         current_item_choices.append(random.choice(self.items))
         current_item_choices.append(random.choice(self.items))
