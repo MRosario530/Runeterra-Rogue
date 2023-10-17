@@ -4,8 +4,9 @@ from keys import *
 
 
 class Beam(pygame.sprite.Sprite):
-    def __init__(self, beam_image, pivot, angle, duration, offset, target_group):
+    def __init__(self, beam_image, pivot, angle, duration, offset, target_group, damage):
         super().__init__()
+        self.damage = damage
         self.angle = angle
         self.pivot = pivot
         self.start_image = beam_image
@@ -28,7 +29,7 @@ class Beam(pygame.sprite.Sprite):
         collisions = pygame.sprite.spritecollide(beam, self.target_group, False)
 
         for collision in collisions:
-            collision.hp -= 10
+            collision.currenthp -= self.damage
 
     def update(self):
         self.beam_travel()

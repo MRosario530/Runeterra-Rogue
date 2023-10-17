@@ -128,7 +128,7 @@ class Controller():
     def play(self, character):
         exit = False
         self.player = character
-        userinterface = UI(self.player)
+        userinterface = UI(self.screen, self.player, self.enemy_group)
 
         camera = Camera(self.player, self.all_sprites_group, self.screen, self.background)
         self.all_sprites_group.add(self.player)
@@ -158,7 +158,7 @@ class Controller():
 
             self.screen.blit(self.background, (0,0))
             camera.camera_draw()
-            userinterface.update(self.screen)
+            userinterface.update()
 
 
             if self.player.flash_cd == 0:

@@ -53,6 +53,7 @@ class Player(pygame.sprite.Sprite):
         self.magic_resist = magic_resist
         self.cooldown_reduction = cooldown_reduction
         self.crit_chance = crit_chance
+        self.item_list = []
 
     def player_rotation(self):  # Method responsible for rotating player icon in relation to the mouse
         mouse_pos = pygame.mouse.get_pos()       

@@ -113,7 +113,7 @@ class Lucian(Player):
             self.ability_1_fire()
 
     def ability_1_fire(self): # Method responsible for creating the beam of ability 1.
-        self.beam = Beam(self.ability_1_animation, self.position, self.angle, 500, pygame.math.Vector2(190, 0), self.enemy_group)
+        self.beam = Beam(self.ability_1_animation, self.position, self.angle, 500, pygame.math.Vector2(190, 0), self.enemy_group, 0.05 * self.attack_damage + 0.1 * self.ability_power)
         self.sprites_group.add(self.beam)
         
     def ability_ult_firing(self): # Method responsible for the firing of ultimate ability.

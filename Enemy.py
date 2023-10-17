@@ -30,8 +30,8 @@ class Enemy(pygame.sprite.Sprite):
         self.shoot_cd = ENEMY_SHOOT_CD
 
         # Enemy stats (should be overridden for each character)
-        self.maxhp = 100
-        self.currenthp = 100
+        self.maxhp = 1000
+        self.currenthp = 1000
 
         self.attack_damage = 50
         self.ability_power = 0
