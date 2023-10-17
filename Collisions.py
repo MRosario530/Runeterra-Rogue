@@ -12,9 +12,9 @@ class Collisions():
     def check_enemy_shots(self):
         collisions = pygame.sprite.groupcollide(self.player_group, self.enemy_bullet_group, False, True)
         for collision in collisions:
-            collision.hp -= collisions.get(collision)[0].damage
+            collision.currenthp -= collisions.get(collision)[0].damage
 
     def check_ally_shots(self):
         collisions = pygame.sprite.groupcollide(self.enemy_group, self.ally_bullet_group, False, True)
         for collision in collisions:
-            collision.hp -= collisions.get(collision)[0].damage
+            collision.currenthp -= collisions.get(collision)[0].damage

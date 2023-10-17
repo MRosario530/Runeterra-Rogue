@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 from Bullet import *
 from keys import *
 
@@ -44,15 +45,14 @@ class Player(pygame.sprite.Sprite):
         self.bullet_allowed_time = bullet_allowed_time
 
         # Player stats (should be overridden for each character)
-        self.hp = hp
+        self.maxhp = hp
+        self.currenthp = hp
         self.attack_damage = attack_damage
         self.ability_power = ability_power
         self.armor = armor
         self.magic_resist = magic_resist
         self.cooldown_reduction = cooldown_reduction
         self.crit_chance = crit_chance
-
-        self.inventory
 
     def player_rotation(self):  # Method responsible for rotating player icon in relation to the mouse
         mouse_pos = pygame.mouse.get_pos()       
@@ -86,11 +86,14 @@ class Player(pygame.sprite.Sprite):
         else:
             self.fire = False
         
-    def attack(self):
+    def attack(self):           # Method which represents the default attack for a player.
         if self.shoot_cd == 0:
             self.shoot_cd = SHOOT_CD
             start_point = self.position + self.gun_offset.rotate(self.angle)
-            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage)
+            if random.randint(1, 100) < self.crit_chance:
+                self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage * 1.4)
+            else:
+                self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage)
             self.ally_bullet_group.add(self.bullet)
             self.sprites_group.add(self.bullet)
 
@@ -151,7 +154,7 @@ class Player(pygame.sprite.Sprite):
             self.show_flash()
             self.flash_cd = 1
 
-    def register_player_inputs(self):
+    def register_player_inputs(self): # Method for checking and receiving all player inputs.
         self.player_input_flash()
         self.update_flash()
         self.player_character_inputs()
@@ -166,10 +169,11 @@ class Player(pygame.sprite.Sprite):
         if self.shoot_cd > 0:
             self.shoot_cd -= 1
 
-    def updateStats(self, item):
-        self.hp += item.hp
+    def updateStats(self, item): # Method which updates player stats upon receiving items.
+        self.maxhp += item.hp
         self.attack_damage += item.attack_damage
         self.ability_power += item.ability_power
         self.armor += item.armor
         self.magic_resist += item.magic_resist
         self.cooldown_reduction += item.cooldown_reduction
+        self.crit_chance += item.crit_chance

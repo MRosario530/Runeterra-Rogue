@@ -1,5 +1,4 @@
 import pygame
-import math
 from Bullet import *
 from keys import *
 from Player import *
@@ -47,7 +46,8 @@ class Lucian(Player):
         self.ability_1_offset = pygame.math.Vector2(35, 0)
 
         # Player stats (should be overridden for each character)
-        self.hp = 1200
+        self.maxhp = 1200
+        self.currenthp = 1200
         self.attack_damage = 70
         self.ability_power = 0
         self.armor = 30
@@ -56,16 +56,16 @@ class Lucian(Player):
         self.crit_chance = 0
 
         super().__init__(screen, self.bullet_group, sprites_group, self.char_image, self.bullet_speed, self.bullet_allowed_time, self.enemy_group, 
-                         self.hp, self.attack_damage, self.ability_power, self.armor, self.magic_resist, self.cooldown_reduction, self.crit_chance)
+                         self.maxhp, self.attack_damage, self.ability_power, self.armor, self.magic_resist, self.cooldown_reduction, self.crit_chance)
 
 
-    def ability_1_cd_timer(self):
-        if self.ability_1_cd >= (150*(1-(self.cooldown_reduction/100))):
+    def ability_1_cd_timer(self):   # Method for updating the cooldown of ability 1.
+        if self.ability_1_cd >= (150*(100/(self.cooldown_reduction + 100))):
             self.ability_1_cd = 0
         elif self.ability_1_cd > 0:
             self.ability_1_cd += 1
 
-    def ability_1_active_timer(self):
+    def ability_1_active_timer(self): # Method for updating the active timer of ability 1.
         if self.ability_1_duration >= AB_1_ACTIVE:
             self.ability_1_active = False
             self.ability_1_duration = 0
@@ -77,13 +77,13 @@ class Lucian(Player):
             self.beam.beam_collision(self.beam)
 
 
-    def ability_ult_cd_timer(self):
-        if self.ability_ult_cd >= (500*(1-(self.cooldown_reduction/100))):
+    def ability_ult_cd_timer(self): # Method for updating the cooldown of ultimate ability.
+        if self.ability_ult_cd >= (500*(100/(self.cooldown_reduction + 100))):
             self.ability_ult_cd = 0
         elif self.ability_ult_cd > 0:
             self.ability_ult_cd += 1
 
-    def ability_ult_active_timer(self):
+    def ability_ult_active_timer(self): # Method for updating the active timer of ultimate ability.
         if self.ability_ult_duration >= 125:
             self.ability_ult_active = False
             self.ability_ult_duration = 0
@@ -91,7 +91,7 @@ class Lucian(Player):
         elif self.ability_ult_duration > 0:
             self.ability_ult_duration += 1
 
-    def ability_inputs(self):
+    def ability_inputs(self):   # Method for registering ability presses.
         self.ability_ult_cd_timer()
         self.ability_1_cd_timer()
         input = pygame.key.get_pressed()    # Retrieves the key presses.
@@ -112,12 +112,11 @@ class Lucian(Player):
             self.ability_1_duration = 1
             self.ability_1_fire()
 
-    def ability_1_fire(self):
+    def ability_1_fire(self): # Method responsible for creating the beam of ability 1.
         self.beam = Beam(self.ability_1_animation, self.position, self.angle, 500, pygame.math.Vector2(190, 0), self.enemy_group)
         self.sprites_group.add(self.beam)
         
-
-    def ability_ult_firing(self):
+    def ability_ult_firing(self): # Method responsible for the firing of ultimate ability.
         if self.ability_ult_duration % 2 == 0 and self.ability_ult_active == True:
             start_point = self.position + self.gun_offset.rotate(self.angle)
             self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage)
@@ -130,7 +129,7 @@ class Lucian(Player):
             self.bullet_group.add(self.bullet2)
             self.sprites_group.add(self.bullet2)
 
-    def ability_ult_update(self):
+    def ability_update(self): # Method for updating all ability related timers and cooldowns.
         self.ability_inputs()
         self.ability_ult_active_timer()
         self.ability_ult_firing()
@@ -139,12 +138,12 @@ class Lucian(Player):
     def update(self):
         if self.can_move:
             self.register_player_inputs()
-        self.ability_ult_update()
+        self.ability_update()
         self.hitbox.center = self.position
         self.rect.center = self.hitbox.center
         if self.to_rotate == True:
             self.player_rotation()
         if self.shoot_cd > 0:
             self.shoot_cd -= 1
-        if self.hp <= 0:
+        if self.currenthp <= 0:
             self.kill()

@@ -5,7 +5,7 @@ from Camera import *
 from Enemy import *
 from Level import *
 from Item import *
-from Menu import *
+from Controller import *
 
 # Initialize window
 
@@ -21,7 +21,7 @@ pygame.mixer.music.load("audio/SoLTheme.mp3")
 pygame.mixer.music.set_volume(0.01)
 pygame.mixer.music.play(-1)
 
-menu = Menu(screen, clock)
+menu = Controller(screen, clock)
 
     
 menu.start_screen()

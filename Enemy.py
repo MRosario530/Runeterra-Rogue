@@ -30,7 +30,9 @@ class Enemy(pygame.sprite.Sprite):
         self.shoot_cd = ENEMY_SHOOT_CD
 
         # Enemy stats (should be overridden for each character)
-        self.hp = 100
+        self.maxhp = 100
+        self.currenthp = 100
+
         self.attack_damage = 50
         self.ability_power = 0
         self.armor = 20
@@ -69,7 +71,7 @@ class Enemy(pygame.sprite.Sprite):
         self.player_pos = pygame.math.Vector2(self.player.hitbox.center)
         self.attack()
         self.aggro()
-        if self.hp <= 0:
+        if self.currenthp <= 0:
             self.kill()
         if self.shoot_cd > 0:
             self.shoot_cd -= 1
