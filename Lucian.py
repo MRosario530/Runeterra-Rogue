@@ -119,7 +119,7 @@ class Lucian(Player):
     def ability_ult_firing(self): # Method responsible for the firing of ultimate ability.
         if self.ability_ult_duration % 2 == 0 and self.ability_ult_active == True:
             start_point = self.position + self.gun_offset.rotate(self.angle)
-            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage)
+            self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage * 0.05)
             self.bullet_group.add(self.bullet)
             self.sprites_group.add(self.bullet)
 
