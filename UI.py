@@ -62,11 +62,22 @@ class UI():
             pygame.draw.rect(self.screen, "red" , pygame.Rect(offset_pos.x - 35, offset_pos.y + 40, health_bar_percent, 10))
 
     def display_items(self):
-        items = self.player.itemList
+        item_image_x = 1200
+        item_image_y = 0
+        items = self.player.item_list
+        for item in items:
+            self.screen.blit(item.image, item.image.get_rect(topright=(item_image_x, item_image_y)))
+            item_image_x -= 38
+            if item_image_x < 800:
+                item_image_y += 38
+                item_image_x = 1200
+
+
 
     def update(self):
         self.stats_update()
         self.player_health_bar()
         self.enemy_health_bars()
+        self.display_items()
 
     

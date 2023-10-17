@@ -246,12 +246,15 @@ class Controller():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if item1_button.checkForInput(mouse_pos):
                             self.player.updateStats(current_item_choices[0])
+                            self.player.item_list.append(current_item_choices[0])
                             return
                         if item2_button.checkForInput(mouse_pos):
                             self.player.updateStats(current_item_choices[1])
+                            self.player.item_list.append(current_item_choices[1])
                             return
                         if item3_button.checkForInput(mouse_pos):
                             self.player.updateStats(current_item_choices[2])
+                            self.player.item_list.append(current_item_choices[2])
                             return
 
             pygame.display.update()
