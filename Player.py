@@ -181,13 +181,13 @@ class Player(pygame.sprite.Sprite):
 
     def sunfire_cape(self):
         if self.sunfire_cd <= 0:
-            self.sunfire = Sunfire(self.sunfire_timer, self.rect.center)
+            self.sunfire = Sunfire(self.sunfire_timer, self.position)
             self.sprites_group.add(self.sunfire)
             self.ally_ability_group.add(self.sunfire)
-            self.sunfire_cd = 200*(100/((5*self.sunfire_count) + 50))
+            self.sunfire_cd = 100*(100/((5*self.sunfire_count) + 50))
         self.sunfire_cd -= 1
         if self.sunfire != None:
-            self.sunfire.updatePlayerPos(self.rect.center)
+            self.sunfire.position = self.position
 
     def update(self):  # Update all positions based off player input.
         self.register_player_inputs()
