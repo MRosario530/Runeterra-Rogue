@@ -3,11 +3,12 @@ import math
 import random
 from Bullet import *
 from keys import *
+from Sunfire import *
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, screen, ally_bullet_group, sprites_group, char_image, bullet_speed, bullet_allowed_time, enemy_group, hp, attack_damage,
-                 ability_power, armor, magic_resist, cooldown_reduction, crit_chance):
+                 ability_power, armor, magic_resist, cooldown_reduction, crit_chance, ally_ability_group, player_group):
         super().__init__()
         # Character Image
         self.image = char_image     
@@ -27,6 +28,8 @@ class Player(pygame.sprite.Sprite):
 
         # Sprite/image/Screen related variables
         self.ally_bullet_group = ally_bullet_group
+        self.ally_ability_group = ally_ability_group
+        self.player_group = player_group
         self.sprites_group = sprites_group
         self.position = pygame.math.Vector2(START_X, START_Y)   # Current player location.
         self.base_image = self.image    # Base image saved for rotation purposes.
@@ -34,6 +37,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.hitbox.copy()
         self.speed = PLAYER_SPEED                               # Player's current speed.
         self.screen = screen                                    # Game window.
+        self.screen_rect = screen.get_rect()
         self.enemy_group = enemy_group
         self.angle = 0
 
@@ -53,7 +57,17 @@ class Player(pygame.sprite.Sprite):
         self.magic_resist = magic_resist
         self.cooldown_reduction = cooldown_reduction
         self.crit_chance = crit_chance
+
+        # Item related variables
+        self.crit_modifier = 1.4
         self.item_list = []
+        self.runaans_count = 0
+        self.sunfire_count = 0
+        self.sunfire_cd = 200
+        self.sunfire_timer = 30
+        self.sunfire = None
+
+
 
     def player_rotation(self):  # Method responsible for rotating player icon in relation to the mouse
         mouse_pos = pygame.mouse.get_pos()       
@@ -92,12 +106,18 @@ class Player(pygame.sprite.Sprite):
             self.shoot_cd = SHOOT_CD
             start_point = self.position + self.gun_offset.rotate(self.angle)
             if random.randint(1, 100) < self.crit_chance:
-                self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage * 1.4)
+                self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage * self.crit_modifier)
             else:
                 self.bullet = Bullet(start_point.x, start_point.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage)
             self.ally_bullet_group.add(self.bullet)
             self.sprites_group.add(self.bullet)
-
+            for x in range(0, self.runaans_count + 1):
+                self.runaans_bullet1 = Bullet(start_point.x, start_point.y, self.angle + (4 * x), self.bullet_speed, self.bullet_allowed_time, self.attack_damage * 0.4)
+                self.runaans_bullet2 = Bullet(start_point.x, start_point.y, self.angle - (4 * x), self.bullet_speed, self.bullet_allowed_time, self.attack_damage * 0.4)
+                self.ally_bullet_group.add(self.runaans_bullet1)
+                self.sprites_group.add(self.runaans_bullet1)
+                self.ally_bullet_group.add(self.runaans_bullet2)
+                self.sprites_group.add(self.runaans_bullet2)
 
     def flash_timer(self):       # Method for timing the cooldown of the flash ability.
         if self.flash_cd >= 500:
@@ -112,7 +132,6 @@ class Player(pygame.sprite.Sprite):
             self.flash_sprite.rect.y = self.flash_y - 0.5*PLAYER_HEIGHT
             self.flash_sprite.image = self.flash_particles
             self.sprites_group.add(self.flash_sprite)
-
     
     def update_flash(self):         # Method which continuously updates the variables relating to flash.
         if self.display_flash:
@@ -125,7 +144,6 @@ class Player(pygame.sprite.Sprite):
         self.display_flash = True
         self.display_timer = 30
         self.draw_flash()
-
     
     def player_input_flash(self):   # Method which handles the user input for flash (f).
         self.flash_timer()
@@ -161,6 +179,15 @@ class Player(pygame.sprite.Sprite):
         self.player_character_inputs()
         self.position += pygame.math.Vector2(self.x_movement, self.y_movement)
 
+    def sunfire_cape(self):
+        if self.sunfire_cd <= 0:
+            self.sunfire = Sunfire(self.sunfire_timer, self.rect.center)
+            self.sprites_group.add(self.sunfire)
+            self.ally_ability_group.add(self.sunfire)
+            self.sunfire_cd = 200*(100/((5*self.sunfire_count) + 50))
+        self.sunfire_cd -= 1
+        if self.sunfire != None:
+            self.sunfire.updatePlayerPos(self.rect.center)
 
     def update(self):  # Update all positions based off player input.
         self.register_player_inputs()
@@ -171,6 +198,7 @@ class Player(pygame.sprite.Sprite):
             self.shoot_cd -= 1
 
     def updateStats(self, item): # Method which updates player stats upon receiving items.
+        self.currenthp += ((self.currenthp / self.maxhp) * item.hp)
         self.maxhp += item.hp
         self.attack_damage += item.attack_damage
         self.ability_power += item.ability_power
@@ -178,3 +206,10 @@ class Player(pygame.sprite.Sprite):
         self.magic_resist += item.magic_resist
         self.cooldown_reduction += item.cooldown_reduction
         self.crit_chance += item.crit_chance
+        if item.name == "Infinity Edge":
+            self.crit_modifier = 1.8
+        if item.name == "Runaan's Hurricane":
+            self.runaans_count += 1
+        if item.name == "Sunfire Aegis":
+            self.sunfire_count += 1
+            self.sunfire_timer += 5

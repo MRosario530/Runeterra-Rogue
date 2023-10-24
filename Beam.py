@@ -1,7 +1,5 @@
 import pygame
-import math
 from keys import *
-
 
 class Beam(pygame.sprite.Sprite):
     def __init__(self, beam_image, pivot, angle, duration, offset, target_group, damage):
@@ -17,7 +15,6 @@ class Beam(pygame.sprite.Sprite):
         self.ability_duration = duration
         self.start_time = pygame.time.get_ticks()
         self.target_group = target_group
-
     
     def beam_travel(self):
         alpha = (int)((pygame.time.get_ticks() - self.start_time)/self.ability_duration*(255))

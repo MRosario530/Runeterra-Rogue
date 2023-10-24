@@ -5,7 +5,7 @@ from Player import *
 from Beam import *
 
 class Lucian(Player):
-    def __init__(self, screen, ally_bullet_group, sprites_group, enemy_group):
+    def __init__(self, screen, ally_bullet_group, sprites_group, enemy_group, ally_ability_group, player_group):
         # Character specific image.
         self.char_image = pygame.transform.scale(pygame.image.load("images/lucian.jpg").convert_alpha(),(PLAYER_WIDTH, PLAYER_HEIGHT))
 
@@ -29,6 +29,8 @@ class Lucian(Player):
         self.bullet_allowed_time = 200
         self.bullet_group = ally_bullet_group
         self.enemy_group = enemy_group
+        self.ally_ability_group = ally_ability_group
+        self.player_group = player_group
 
         # Ult Ability related variables.
         self.ability_ult_cd = 0
@@ -56,11 +58,11 @@ class Lucian(Player):
         self.crit_chance = 0
 
         super().__init__(screen, self.bullet_group, sprites_group, self.char_image, self.bullet_speed, self.bullet_allowed_time, self.enemy_group, 
-                         self.maxhp, self.attack_damage, self.ability_power, self.armor, self.magic_resist, self.cooldown_reduction, self.crit_chance)
+                         self.maxhp, self.attack_damage, self.ability_power, self.armor, self.magic_resist, self.cooldown_reduction, self.crit_chance, self.ally_ability_group, self.player_group)
 
 
     def ability_1_cd_timer(self):   # Method for updating the cooldown of ability 1.
-        if self.ability_1_cd >= (150*(100/(self.cooldown_reduction + 100))):
+        if self.ability_1_cd >= ((150*(100/(self.cooldown_reduction + 100))) + AB_1_ACTIVE):
             self.ability_1_cd = 0
         elif self.ability_1_cd > 0:
             self.ability_1_cd += 1
@@ -76,9 +78,8 @@ class Lucian(Player):
             self.ability_1_duration += 1
             self.beam.beam_collision(self.beam)
 
-
     def ability_ult_cd_timer(self): # Method for updating the cooldown of ultimate ability.
-        if self.ability_ult_cd >= (500*(100/(self.cooldown_reduction + 100))):
+        if self.ability_ult_cd >= (500*(100/(self.cooldown_reduction + 100))) + 125:
             self.ability_ult_cd = 0
         elif self.ability_ult_cd > 0:
             self.ability_ult_cd += 1
@@ -90,6 +91,7 @@ class Lucian(Player):
             self.to_rotate = True
         elif self.ability_ult_duration > 0:
             self.ability_ult_duration += 1
+            self.shoot_cd = 2 # Disables the ability to shoot while the ult is active
 
     def ability_inputs(self):   # Method for registering ability presses.
         self.ability_ult_cd_timer()
@@ -125,7 +127,7 @@ class Lucian(Player):
 
         elif self.ability_ult_duration % 2 == 1 and self.ability_ult_active == True:
             start_point2 = self.position + self.gun_offset2.rotate(self.angle)
-            self.bullet2 = Bullet(start_point2.x, start_point2.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage)
+            self.bullet2 = Bullet(start_point2.x, start_point2.y, self.angle, self.bullet_speed, self.bullet_allowed_time, self.attack_damage * 0.05)
             self.bullet_group.add(self.bullet2)
             self.sprites_group.add(self.bullet2)
 
@@ -136,6 +138,8 @@ class Lucian(Player):
         self.ability_1_active_timer()
 
     def update(self):
+        if self.sunfire_count >= 1:
+            self.sunfire_cape()
         if self.can_move:
             self.register_player_inputs()
         self.ability_update()

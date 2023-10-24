@@ -32,6 +32,7 @@ class Controller():
 
         self.enemy_bullet_group = pygame.sprite.Group()
         self.ally_bullet_group = pygame.sprite.Group()
+        self.ally_ability_group = pygame.sprite.Group()
         self.all_sprites_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
         self.player_group = pygame.sprite.Group()
@@ -117,7 +118,7 @@ class Controller():
                             play_button_display = True
                             center_image_display = True
                             current_character_text = "Lucian"
-                            current_character = Lucian(self.screen, self.ally_bullet_group, self.all_sprites_group, self.enemy_group)
+                            current_character = Lucian(self.screen, self.ally_bullet_group, self.all_sprites_group, self.enemy_group, self.ally_ability_group, self.player_group)
                             center_image = Lucian_image
                         if back_button.checkForInput(mouse_pos):
                             self.start_screen()
@@ -139,7 +140,7 @@ class Controller():
         pygame.time.set_timer(timer, 1000)
 
         level = Level(self.enemy_group, self.all_sprites_group, self.player, self.player_group, self.enemy_bullet_group)
-        check_collides = Collisions(self.ally_bullet_group, self.enemy_bullet_group, self.player_group, self.enemy_group)
+        check_collides = Collisions(self.ally_bullet_group, self.enemy_bullet_group, self.player_group, self.enemy_group, self.ally_ability_group)
 
         while not exit:
             for event in pygame.event.get():
@@ -183,6 +184,7 @@ class Controller():
 
             check_collides.check_ally_shots()
             check_collides.check_enemy_shots()
+            check_collides.check_ally_abilities()
             if (len(self.player_group.sprites()) == 0):
                 self.game_over_screen()
 

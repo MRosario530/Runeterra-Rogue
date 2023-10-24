@@ -33,11 +33,14 @@ class UI():
         health_bar_percent = 70*(self.player.currenthp / self.player.maxhp)
         pygame.draw.rect(self.screen, "green" , pygame.Rect(565, 390, health_bar_percent, 10))
 
-
     def stats_update(self):
         self.adtext = self.base_font.render(str(self.player.attack_damage), True, "yellow")
         self.armortext = self.base_font.render(str(self.player.armor), True, "yellow")
-        self.crittext = self.base_font.render(str(self.player.crit_chance), True, "yellow")
+        if self.player.crit_chance <= 100:
+            self.crittext = self.base_font.render(str(self.player.crit_chance) + "%", True, "yellow")
+        else:
+            self.crittext = self.base_font.render("100%", True, "yellow")
+        
         self.aptext = self.base_font.render(str(self.player.ability_power), True, "yellow")
         self.mrtext = self.base_font.render(str(self.player.magic_resist), True, "yellow")
         self.cdrtext = self.base_font.render(str(self.player.cooldown_reduction), True, "yellow")
@@ -72,12 +75,10 @@ class UI():
                 item_image_y += 38
                 item_image_x = 1200
 
-
-
     def update(self):
+        self.enemy_health_bars()
         self.stats_update()
         self.player_health_bar()
-        self.enemy_health_bars()
         self.display_items()
 
     
