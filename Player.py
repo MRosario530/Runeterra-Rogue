@@ -179,7 +179,7 @@ class Player(pygame.sprite.Sprite):
         self.player_character_inputs()
         self.position += pygame.math.Vector2(self.x_movement, self.y_movement)
 
-    def sunfire_cape(self):
+    def sunfire_cape(self): # Method which creates a damaging pulse around the player (sunfire aura).
         if self.sunfire_cd <= 0:
             self.sunfire = Sunfire(self.sunfire_timer, self.position)
             self.sprites_group.add(self.sunfire)

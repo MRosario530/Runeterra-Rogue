@@ -5,7 +5,7 @@ from keys import *
 class Camera(pygame.sprite.Group):
     def __init__(self, player, all_sprites_group, screen, background):
         super().__init__()
-        self.player = player
+        self.player = player # Player, sprite, and screen related variables needed for camera movement.
         self.player_pos = player.rect
         self.offset = pygame.math.Vector2()
         self.all_sprites_group = all_sprites_group
@@ -13,7 +13,7 @@ class Camera(pygame.sprite.Group):
         self.background = background
         self.bg_rect = background.get_rect(topleft = (0,0))
 
-    def camera_draw(self):
+    def camera_draw(self):  # Function which focuses the player in the center of the screen at all times while moving and updates all other sprites appropriately.
         self.player_pos = self.player.rect
         self.offset.x = self.player_pos.centerx - WIDTH // 2
         self.offset.y = self.player_pos.centery - HEIGHT // 2

@@ -16,21 +16,19 @@ base_font = pygame.font.SysFont("cambria", 50)
 character_font = pygame.font.SysFont("times new roman", 70)
 item_font = pygame.font.SysFont("cambria", 22)
 
-isAlive = False
-
 class Controller():
     def __init__(self, screen, clock):
         super().__init__()
-        self.menu_bg = pygame.transform.scale(pygame.image.load("images/demacia_splash.jpeg"),(WIDTH, HEIGHT))
-        self.character_select_bg = pygame.transform.scale(pygame.image.load("images/character_select.jpg"),(WIDTH, HEIGHT))
+        self.menu_bg = pygame.transform.scale(pygame.image.load("images/demacia_splash.jpeg"),(WIDTH, HEIGHT))  # Background for start screen.
+        self.character_select_bg = pygame.transform.scale(pygame.image.load("images/character_select.jpg"),(WIDTH, HEIGHT)) # Background for character select screen.
         self.screen = screen
         self.clock = clock
 
-        self.background = pygame.image.load('Images/ground.png').convert()
-        self.flash_icon = pygame.image.load('Images/flash.png').convert()
+        self.background = pygame.image.load('Images/ground.png').convert()      # In game ground texture.
+        self.flash_icon = pygame.image.load('Images/flash.png').convert()       # In game flash textures.
         self.flash_icon_grey = pygame.image.load('Images/flash_grey.png').convert()
 
-        self.enemy_bullet_group = pygame.sprite.Group()
+        self.enemy_bullet_group = pygame.sprite.Group() # All sprite groups related to collision/gameplay.
         self.ally_bullet_group = pygame.sprite.Group()
         self.ally_ability_group = pygame.sprite.Group()
         self.all_sprites_group = pygame.sprite.Group()
@@ -38,7 +36,7 @@ class Controller():
         self.player_group = pygame.sprite.Group()
 
 
-    def loadItems(self):
+    def loadItems(self):    # Function to load all items for the game from a file.
         with open('item.csv', 'r') as csv_file:
             self.items = []
             reader = csv.reader(csv_file)
@@ -49,7 +47,7 @@ class Controller():
             csv_file.close()
 
 
-    def start_screen(self):
+    def start_screen(self): # Function related to the start screen, contains play and quit buttons.
         play_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(600, 300), text_input="PLAY", font=base_font, button_color="blue", button_hover_color="white")
         quit_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(600, 450), text_input="QUIT", font=base_font, button_color="blue", button_hover_color="white")
         self.loadItems()
@@ -77,7 +75,7 @@ class Controller():
                         sys.exit()
             pygame.display.update()
         
-    def character_select(self):
+    def character_select(self): # Function related to the character select screen, displays character art and title upon selection.
         center_image_display = False
         center_image = None
         play_button_display = False
@@ -126,7 +124,7 @@ class Controller():
                             self.play(current_character)
             pygame.display.update()
 
-    def play(self, character):
+    def play(self, character):  # Function related to gameplay loop.
         exit = False
         self.player = character
         userinterface = UI(self.screen, self.player, self.enemy_group)
@@ -192,7 +190,7 @@ class Controller():
             pygame.display.update()
             self.clock.tick(FRAME_RATE)
 
-    def game_over_screen(self):
+    def game_over_screen(self): # Function related to game over screen.
         restart_button = Button(image=pygame.image.load("images/button_bg.png"), pos=(600, 600), text_input="MENU", font=base_font, button_color="blue", button_hover_color="white")
         self.enemy_bullet_group.empty()
         self.ally_bullet_group.empty()
@@ -215,7 +213,7 @@ class Controller():
                         self.start_screen()
             pygame.display.update()
 
-    def item_choice_screen(self):
+    def item_choice_screen(self):   # Function related to item choice screen (choose from 3 random items).
         current_item_choices = []
         current_item_choices.append(random.choice(self.items))
         current_item_choices.append(random.choice(self.items))

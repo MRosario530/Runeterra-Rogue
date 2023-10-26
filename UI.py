@@ -13,7 +13,7 @@ class UI():
         self.enemy_group = enemy_group
         self.offset = pygame.math.Vector2()
 
-
+        # Variables related to displaying character stats.
         self.adtext = self.base_font.render(str(self.player.attack_damage), True, "yellow")
         self.armortext = self.base_font.render(str(self.player.armor), True, "yellow")
         self.crittext = self.base_font.render(str(self.player.crit_chance), True, "yellow")
@@ -28,12 +28,12 @@ class UI():
         self.mrtext_rect = self.mrtext.get_rect(topleft=(140, 618))
         self.cdrtext_rect = self.cdrtext.get_rect(topleft=(140, 670))
 
-    def player_health_bar(self):
+    def player_health_bar(self):    # Function which draws and updates the player health bar.
         pygame.draw.rect(self.screen, "black" , pygame.Rect(565, 390, 70, 10))
         health_bar_percent = 70*(self.player.currenthp / self.player.maxhp)
         pygame.draw.rect(self.screen, "green" , pygame.Rect(565, 390, health_bar_percent, 10))
 
-    def stats_update(self):
+    def stats_update(self):         # Function which draws and updates the character stats in the bottom-right of the screen.
         self.adtext = self.base_font.render(str(self.player.attack_damage), True, "yellow")
         self.armortext = self.base_font.render(str(self.player.armor), True, "yellow")
         if self.player.crit_chance <= 100:
@@ -53,7 +53,7 @@ class UI():
         self.screen.blit(self.mrtext, self.mrtext_rect)
         self.screen.blit(self.cdrtext, self.cdrtext_rect)
 
-    def enemy_health_bars(self):
+    def enemy_health_bars(self):    # Function which draws and updates all enemy health bars.
         player_pos = self.player.rect
         self.offset.x = player_pos.centerx - WIDTH // 2
         self.offset.y = player_pos.centery - HEIGHT // 2
@@ -64,7 +64,7 @@ class UI():
             health_bar_percent = 70*(enemy.currenthp / enemy.maxhp)
             pygame.draw.rect(self.screen, "red" , pygame.Rect(offset_pos.x - 35, offset_pos.y + 40, health_bar_percent, 10))
 
-    def display_items(self):
+    def display_items(self):    # Function which draws and updates the player items in the top-right of the screen.
         item_image_x = 1200
         item_image_y = 0
         items = self.player.item_list

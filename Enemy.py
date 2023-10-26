@@ -8,31 +8,25 @@ from Bullet import *
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, enemy_group, all_sprites_group, pos, player, player_group, enemy_bullet_group):
         super().__init__(enemy_group, all_sprites_group)
-        self.image = pygame.image.load("images/cannon.png").convert_alpha()
+        self.image = pygame.image.load("images/cannon.png").convert_alpha() # Variables related to enemy sprite/image.
         self.image = pygame.transform.rotozoom(self.image, 0, 0.25)
-
         self.all_sprites_group = all_sprites_group
         self.player_group = player_group
         self.enemy_bullet_group = enemy_bullet_group
-
         self.rect = self.image.get_rect()
         self.rect.center = pos
+        self.position = pygame.math.Vector2(pos)
 
-        self.enemy_direction = pygame.math.Vector2()
+        self.enemy_direction = pygame.math.Vector2() # Variables related to enemy movement.
         self.enemy_velocity = pygame.math.Vector2()
         self.enemy_speed = 2
 
-        self.position = pygame.math.Vector2(pos)
-        self.player = player
-
+        self.player = player    # Variables related to player.
         self.player_pos = pygame.math.Vector2(self.player.hitbox.center)
 
-        self.shoot_cd = ENEMY_SHOOT_CD
-
-        # Enemy stats (should be overridden for each character)
+        self.shoot_cd = ENEMY_SHOOT_CD # Enemy stats (should be overridden for each character)
         self.maxhp = 1000
         self.currenthp = 1000
-
         self.attack_damage = 50
         self.ability_power = 0
         self.armor = 20
@@ -40,7 +34,7 @@ class Enemy(pygame.sprite.Sprite):
         self.cooldown_reduction = 0
 
 
-    def aggro(self):
+    def aggro(self):    # Function which tells the enemy to path towards the player.
         distance = (self.player_pos - self.rect.center).magnitude()
 
         if distance > 200:
@@ -54,7 +48,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.centerx = self.position.x
         self.rect.centery = self.position.y
 
-    def attack(self):
+    def attack(self):   # Function for enemy attacks.
         if self.shoot_cd == 0:
             self.shoot_cd = ENEMY_SHOOT_CD
             start_point = self.position

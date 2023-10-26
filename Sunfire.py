@@ -15,7 +15,7 @@ class Sunfire(pygame.sprite.Sprite):
         self.rect.center = (position[0], position[1])
         self.damage = 20
 
-    def sunfire_expand(self):
+    def sunfire_expand(self):   # Function which expands the sunfire image by a set amount on every call.
         self.sunfire_multiple = self.sunfire_multiple * 1.06
         self.image = pygame.transform.scale_by(self.original_image, self.sunfire_multiple)
         self.rect = self.original_rect.scale_by(self.sunfire_multiple)

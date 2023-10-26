@@ -1,3 +1,5 @@
+# Project by Miguel Rosario
+
 import pygame
 from keys import *
 from Lucian import *

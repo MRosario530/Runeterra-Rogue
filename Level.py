@@ -4,7 +4,7 @@ from Enemy import *
 from keys import *
 
 
-class Level(pygame.sprite.Group):
+class Level(pygame.sprite.Group):   # Class for determining enemy spawn patterns.
     def __init__(self, enemy_group, all_sprites_group, player, player_group, enemy_bullet_group):
         super().__init__()
         self.enemy_group = enemy_group
